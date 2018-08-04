@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-funkwhale-env
+data:
+  DATABASE_URL: "postgresql://{{ urlquery .Values.postgresql.postgresUser }}:{{ urlquery .Values.postgresql.postgresPassword }}@{{ urlquery .Release.Name }}-postgresql:5432/{{ urlquery .Values.postgresql.postgresDatabase }}"
+  MEDIA_ROOT: /srv/funkwhale/data/media/
+  STATIC_ROOT: /srv/funkwhale/data/static/
+  FUNKWHALE_URL: http://{{ urlquery .Values.domain }}/
+  DJANGO_ALLOWED_HOSTS: {{ .Values.domain }}
+  DJANGO_SECRET_KEY: "qouT9eH8VAbETkNmAR8x/78zDexVGtNJiyBAdJAXoHvtz56rzrI+4GEGIgsi"
+  DJANGO_SETTINGS_MODULE: config.settings.production

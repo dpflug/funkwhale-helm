@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+#  tls:
+#    - hosts:
+#      - {{ .Values.domain }}
+#      secretName: {{ .Release.Name }}
+  rules:
+    - host: {{ .Values.domain }}
+      http:
+        paths:
+          - backend:
+              serviceName: {{ .Release.Name }}-funkwhale
+              servicePort: 80

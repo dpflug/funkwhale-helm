@@ -14,29 +14,26 @@ spec:
       labels:
         app: funkwhale
     spec:
+      initContainers:
+      - name: migrate
+        image: funkwhale/funkwhale:0.16
+        args: ["sh", "-c" ,"python manage.py migrate && (echo \"from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(username='admin').exists() or User.objects.create_superuser(username='admin', email='admin@example.com', password='pass')\" | python manage.py shell)"]
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-funkwhale-env
       containers:
       - name: api
         image: funkwhale/funkwhale:0.16
-        env:
-          - name: DATABASE_URL
-            value: postgresql://{{ .Values.postgresql.postgresUser }}:{{ .Values.postgresql.postgresPassword }}@{{ .Release.Name }}-postgresql:5432/{{ .Values.postgresql.postgresDatabase }}
-          - name: MEDIA_ROOT
-            value: /srv/funkwhale/data/media/
-          - name: FUNKWHALE_URL
-            value: http://example.org/
-          - name: DJANGO_ALLOWED_HOSTS
-            value: example.org
-          - name: DJANGO_SECRET_KEY
-            value: "qouT9eH8VAbETkNmAR8x/78zDexVGtNJiyBAdJAXoHvtz56rzrI+4GEGIgsi"
-          - name: DJANGO_SETTINGS_MODULE
-            value: config.settings.production
-
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-funkwhale-env
         ports:
         - containerPort: 5000
         volumeMounts:
         - name: music-mount
-          mountPath: /srv/funkwhale/data/media/
+          mountPath: /srv/funkwhale/data/
       volumes:
       - name: music-mount
         hostPath:
           path: /host-home/
+

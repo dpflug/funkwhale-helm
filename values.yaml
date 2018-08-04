@@ -1,0 +1,6 @@
+postgresql:
+    postgresUser: funkwhale
+    postgresPassword: "u0.hp.8hu0p09h"
+    postgresDatabase: funkwhale
+
+domain: cool-music-stuff.pflug.email
