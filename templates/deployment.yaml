@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-funkwhale
+  labels:
+    app: funkwhale
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: funkwhale
+  template:
+    metadata:
+      labels:
+        app: funkwhale
+    spec:
+      containers:
+      - name: api
+        image: funkwhale/funkwhale:0.16
+        env:
+          - name: DATABASE_URL
+            value: postgresql://{{ .Values.postgresql.postgresUser }}:{{ .Values.postgresql.postgresPassword }}@{{ .Release.Name }}-postgresql:5432/{{ .Values.postgresql.postgresDatabase }}
+          - name: MEDIA_ROOT
+            value: /srv/funkwhale/data/media/
+          - name: FUNKWHALE_URL
+            value: http://example.org/
+          - name: DJANGO_ALLOWED_HOSTS
+            value: example.org
+          - name: DJANGO_SECRET_KEY
+            value: "qouT9eH8VAbETkNmAR8x/78zDexVGtNJiyBAdJAXoHvtz56rzrI+4GEGIgsi"
+          - name: DJANGO_SETTINGS_MODULE
+            value: config.settings.production
+
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: music-mount
+          mountPath: /srv/funkwhale/data/media/
+      volumes:
+      - name: music-mount
+        hostPath:
+          path: /host-home/

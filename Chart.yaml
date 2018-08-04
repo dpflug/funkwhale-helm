@@ -1,0 +1,15 @@
+apiVersion: "v1"
+name: "Funkwhale"
+version: 0.0.1
+description: Funkwhale audio server
+keywords:
+      - music
+home: https://funkwhale.audio/
+sources:
+      - A list of URLs to source code for this project (optional)
+maintainers:
+  - name: "David Pflug"
+    email: "david@pflug.email"
+  - name: "daurminator"
+icon: A URL to an SVG or PNG image to be used as an icon (optional).
+appVersion: 0.16
